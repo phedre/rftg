@@ -517,6 +517,8 @@
 #define VP_ANTI_XENO_DEVEL      38
 #define VP_XENO_MILITARY        39
 
+#define VP_GOOD                 40
+
 
 /*
  * The intermediate goal tiles.

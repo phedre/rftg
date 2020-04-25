@@ -35,6 +35,9 @@
 
 #define TITLE "Race for the Galaxy " RELEASE
 
+#define ENABLE_PROMO
+#define ENABLE_PROMO_GUI
+
 #define SERVER_1 "rftg.plingri.net"
 #define SERVER_2 "keldon.net"
 
@@ -54,7 +57,7 @@ static GKeyFile *pref_file;
 /*
  * AI verbosity.
  */
-int verbose = 0;
+int verbose = 1;
 
 /*
  * Current (real) game state.
@@ -7157,13 +7160,14 @@ void gui_choose_pay(game *g, int who, int which, int list[], int *num,
 {
 	card *c_ptr;
 	displayed *i_ptr;
+	power_where w_list[100];
 	power *o_ptr;
 	discounts *d_ptr;
 	mil_strength *m_ptr;
 	char *cost_card;
 	char buf[1024], *p;
 	int i, j, n = 0, ns = 0, max, high_color;
-	int num_hand, conjunction;
+	int num_powers, num_hand, conjunction;
 	int military, cost, conquer_mil, conquer_discount_mil, bonus;
 	int forced_hand;
 	long special_forced, special_legal;
@@ -7410,6 +7414,22 @@ void gui_choose_pay(game *g, int who, int which, int list[], int *num,
 	max = compute_forced_choice(list, *num, special, *num_special,
 	                            &special_forced, &special_legal,
 	                            &forced_hand, mil_bonus_or_takeover_power);
+
+	/* Check for takeover: allow selecting cards */
+	if (c_ptr->owner != who)
+	{
+		max = 0;
+		/* Get settle phase powers */
+		num_powers = get_powers(g, who, PHASE_SETTLE, w_list);
+		/* Loop over powers */
+		for (i = 0; i < num_powers; i++)
+		{
+			/* Get power pointer */
+			o_ptr = w_list[i].o_ptr;
+			/* Check for ability to use cards from hand for military */
+			if (o_ptr->code & P3_MILITARY_HAND) max += o_ptr->value;
+		}
+	}
 
 	/* Check for no automatic selection */
 	if (!opt.auto_select)
@@ -10328,11 +10348,12 @@ static void apply_options(void)
 	/* Set advanced flag */
 	real_game.advanced = opt.advanced;
 
-#if 0
+#ifdef ENABLE_PROMO
 	/* Set promo flag */
 	real_game.promo = opt.promo;
-#endif
+#else
 	real_game.promo = 0;
+#endif
 
 	/* Set goals disabled */
 	real_game.goal_disabled = opt.disable_goal;
@@ -11886,6 +11907,9 @@ static void gui_redo(GtkMenuItem *menu_item, gpointer data)
 static GtkWidget *num_players_radio[MAX_PLAYER];
 static GtkWidget *expansion_radio[MAX_EXPANSION];
 static GtkWidget *advanced_check;
+#ifdef ENABLE_PROMO_GUI
+static GtkWidget *promo_check;
+#endif
 static GtkWidget *disable_goal_check;
 static GtkWidget *disable_takeover_check;
 static GtkWidget *campaign_label, *seed_entry;
@@ -12512,7 +12536,7 @@ static void gui_new_parameters(GtkMenuItem *menu_item, gpointer data)
 	/* Add checkbox to options box */
 	gtk_container_add(GTK_CONTAINER(options_box), advanced_check);
 
-#if 0
+#ifdef ENABLE_PROMO_GUI
 	/* Create check box for promo start worlds */
 	promo_check = gtk_check_button_new_with_label("Include promo cards");
 
@@ -12666,7 +12690,7 @@ static void gui_new_parameters(GtkMenuItem *menu_item, gpointer data)
 		                gtk_toggle_button_get_active(
 		                             GTK_TOGGLE_BUTTON(advanced_check));
 
-#if 0
+#ifdef ENABLE_PROMO_GUI
 		/* Set promo flag */
 		opt.promo = gtk_toggle_button_get_active(
 		                GTK_TOGGLE_BUTTON(promo_check));
