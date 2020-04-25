@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 	game my_game;
 	int i, j, n = 100;
 	int num_players = 3;
-	int expansion = 0, advanced = 0, promo = 0;
+	int expansion = 0, advanced = 0, promo = 0, second_edition = 0;
 	char buf[1024], *names[MAX_PLAYER];
 	double factor = 1.0;
 
@@ -123,6 +123,13 @@ int main(int argc, char *argv[])
 			promo = 1;
 		}
 
+		/* Check for second edition cards */
+		else if (!strcmp(argv[i], "-s"))
+		{
+			/* Set second edition cards */
+			second_edition = 1;
+		}
+
 		/* Check for number of games */
 		else if (!strcmp(argv[i], "-n"))
 		{
@@ -156,6 +163,9 @@ int main(int argc, char *argv[])
 
 	/* Set promo flag */
 	my_game.promo = promo;
+
+	/* Set second edition flag */
+	my_game.second_edition = second_edition;
 
 	/* Assume no options disabled */
 	my_game.goal_disabled = 0;

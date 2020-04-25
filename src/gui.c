@@ -35,9 +35,6 @@
 
 #define TITLE "Race for the Galaxy " RELEASE
 
-#define ENABLE_PROMO
-#define ENABLE_PROMO_GUI
-
 #define SERVER_1 "rftg.plingri.net"
 #define SERVER_2 "keldon.net"
 
@@ -10348,12 +10345,11 @@ static void apply_options(void)
 	/* Set advanced flag */
 	real_game.advanced = opt.advanced;
 
-#ifdef ENABLE_PROMO
 	/* Set promo flag */
 	real_game.promo = opt.promo;
-#else
-	real_game.promo = 0;
-#endif
+
+	/* Set second edition flag */
+	real_game.second_edition = opt.second_edition;
 
 	/* Set goals disabled */
 	real_game.goal_disabled = opt.disable_goal;
@@ -11004,6 +11000,7 @@ static void read_prefs(void)
 	opt.advanced = g_key_file_get_boolean(pref_file, "game",
 	                                      "advanced", NULL);
 	opt.promo = g_key_file_get_boolean(pref_file, "game", "promo", NULL);
+	opt.second_edition = g_key_file_get_boolean(pref_file, "game", "second_edition", NULL);
 	opt.disable_goal = g_key_file_get_boolean(pref_file, "game",
 	                                          "no_goals", NULL);
 	opt.disable_takeover = g_key_file_get_boolean(pref_file, "game",
@@ -11229,6 +11226,7 @@ void save_prefs(void)
 	g_key_file_set_integer(pref_file, "game", "expansion", opt.expanded);
 	g_key_file_set_boolean(pref_file, "game", "advanced", opt.advanced);
 	g_key_file_set_boolean(pref_file, "game", "promo", opt.promo);
+	g_key_file_set_boolean(pref_file, "game", "second_edition", opt.second_edition);
 	g_key_file_set_boolean(pref_file, "game", "no_goals", opt.disable_goal);
 	g_key_file_set_boolean(pref_file, "game", "no_takeover",
 	                       opt.disable_takeover);
@@ -11907,9 +11905,8 @@ static void gui_redo(GtkMenuItem *menu_item, gpointer data)
 static GtkWidget *num_players_radio[MAX_PLAYER];
 static GtkWidget *expansion_radio[MAX_EXPANSION];
 static GtkWidget *advanced_check;
-#ifdef ENABLE_PROMO_GUI
 static GtkWidget *promo_check;
-#endif
+static GtkWidget *second_edition_check;
 static GtkWidget *disable_goal_check;
 static GtkWidget *disable_takeover_check;
 static GtkWidget *campaign_label, *seed_entry;
@@ -12536,7 +12533,6 @@ static void gui_new_parameters(GtkMenuItem *menu_item, gpointer data)
 	/* Add checkbox to options box */
 	gtk_container_add(GTK_CONTAINER(options_box), advanced_check);
 
-#ifdef ENABLE_PROMO_GUI
 	/* Create check box for promo start worlds */
 	promo_check = gtk_check_button_new_with_label("Include promo cards");
 
@@ -12545,7 +12541,15 @@ static void gui_new_parameters(GtkMenuItem *menu_item, gpointer data)
 
 	/* Add checkbox to options box */
 	gtk_container_add(GTK_CONTAINER(options_box), promo_check);
-#endif
+
+	/* Create check box for second_edition cards */
+	second_edition_check = gtk_check_button_new_with_label("Include second edition cards");
+
+	/* Set checkbox status */
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(second_edition_check), opt.second_edition);
+
+	/* Add checkbox to options box */
+	gtk_container_add(GTK_CONTAINER(options_box), second_edition_check);
 
 	/* Create check box for disabled goals */
 	disable_goal_check = gtk_check_button_new_with_label("Disable goals");
@@ -12690,11 +12694,13 @@ static void gui_new_parameters(GtkMenuItem *menu_item, gpointer data)
 		                gtk_toggle_button_get_active(
 		                             GTK_TOGGLE_BUTTON(advanced_check));
 
-#ifdef ENABLE_PROMO_GUI
 		/* Set promo flag */
 		opt.promo = gtk_toggle_button_get_active(
 		                GTK_TOGGLE_BUTTON(promo_check));
-#endif
+
+		/* Set second edition flag */
+		opt.second_edition = gtk_toggle_button_get_active(
+		                GTK_TOGGLE_BUTTON(second_edition_check));
 
 		/* Set goals disabled flag */
 		opt.disable_goal = exp_info[opt.expanded].has_goals &&

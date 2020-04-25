@@ -80,8 +80,10 @@ static int read_game(game *g, FILE* fff)
 		if (!g->camp) return -1;
 	}
 
+	/* TODO */
 	/* Clear other options */
 	g->promo = 0;
+	g->second_edition = 0;
 
 	/* Clear simulation flag */
 	g->simulation = 0;

@@ -729,7 +729,9 @@ static void handle_status_meta(char *ptr, int size)
 
 	/* Clear local only flags */
 	real_game.camp = NULL;
+	/* TODO */
 	real_game.promo = 0;
+	real_game.second_edition = 0;
 
 	/* Initialize card designs for this expansion level */
 	init_game(&real_game);

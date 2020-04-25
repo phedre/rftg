@@ -97,6 +97,9 @@ typedef struct options
 	/* Promo cards */
 	int promo;
 
+	/* Second edition cards */
+	int second_edition;
+
 	/* Disable goals */
 	int disable_goal;
 

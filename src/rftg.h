@@ -182,7 +182,11 @@
 
 #define FLAG_XENO            (1ULL << 22)
 #define FLAG_ANTI_XENO       (1ULL << 23)
-#define FLAG_PEACEFUL        (1ULL << 24)
+
+#define FLAG_FIRST_EDITION  (1ULL << 24)
+#define FLAG_SECOND_EDITION  (1ULL << 25)
+
+#define FLAG_PEACEFUL        (1ULL << 26)
 
 /*
  * Good types (and cost).
@@ -992,6 +996,9 @@ typedef struct game
 
 	/* Include promo start worlds in deck */
 	int8_t promo;
+
+	/* Include second edition cards in deck */
+	int8_t second_edition;
 
 	/* Size of deck in use */
 	int16_t deck_size;

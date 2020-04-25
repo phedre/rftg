@@ -51,6 +51,7 @@ static char *camp_flags[] =
 
 /*
  * Names of card flags.
+ * Note: The PEACEFUL flag is added automatically and thus is not listed here.
  */
 static char *flag_name[] =
 {
@@ -78,7 +79,8 @@ static char *flag_name[] =
 	"DISCARD_PRODUCE",
 	"XENO",
 	"ANTI_XENO",
-	"PROMO",
+	"FIRST_EDITION",
+	"SECOND_EDITION",
 	NULL
 };
 
@@ -1146,8 +1148,10 @@ void init_game(game *g)
 		/* Get number of cards in use */
 		n = d_ptr->expand[g->expanded];
 
-		/* Skip promo cards if not included */
+		/* Skip promo and first/second edition cards if not included */
 		if (!g->promo && (d_ptr->flags & FLAG_PROMO)) n = 0;
+		if (g->second_edition && (d_ptr->flags & FLAG_FIRST_EDITION)) n = 0;
+		if (!g->second_edition && (d_ptr->flags & FLAG_SECOND_EDITION)) n = 0;
 
 		/* Add cards */
 		for (j = 0; j < n; j++)

@@ -961,7 +961,9 @@ static int db_load_game(int gid)
 	g.advanced = strtol(row[1], NULL, 0);
 	g.goal_disabled = strtol(row[2], NULL, 0);
 	g.takeover_disabled = strtol(row[3], NULL, 0);
+	/* TODO */
 	g.promo = 0;
+	g.second_edition = 0;
 	g.camp = NULL;
 
 	/* Free results */
