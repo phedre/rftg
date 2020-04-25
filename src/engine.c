@@ -5104,14 +5104,14 @@ int settle_callback(game *g, int who, int which, int list[], int num,
 		return 0;
 	}
 
-#if 0
+//#if 0
 	/* Check for hand military used and too much strength */
-	if (hand_military > 0 && military + hand_military > c_ptr->d_ptr->cost)
+	if (!takeover && hand_military > 0 && military + hand_military > t_ptr->d_ptr->cost)
 	{
 		/* Too much payment */
 		return 0;
 	}
-#endif
+//#endif
 
 	/* Check for insufficient payment */
 	if ((!conquer || pay_military) && cost > num)
@@ -14336,6 +14336,24 @@ int get_score_bonus(game *g, int who, int which)
 		{
 			/* Add bonus for prestige */
 			amt += p_ptr->prestige;
+		}
+		else if (v_ptr->type == VP_GOOD)
+		{
+			/* Start at first active card */
+			x = p_ptr->head[WHERE_ACTIVE];
+
+			/* Loop over cards */
+			for ( ; x != -1; x = g->deck[x].next)
+			{
+				/* Get card pointer */
+				c_ptr = &g->deck[x];
+
+				/* Skip non-worlds */
+				if (c_ptr->d_ptr->type != TYPE_WORLD) continue;
+
+				/* Check for good */
+				if (c_ptr->num_goods) amt++;
+			}
 		}
 		else if (v_ptr->type == VP_KIND_GOOD)
 		{

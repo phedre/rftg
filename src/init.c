@@ -78,6 +78,7 @@ static char *flag_name[] =
 	"DISCARD_PRODUCE",
 	"XENO",
 	"ANTI_XENO",
+	"PROMO",
 	NULL
 };
 
@@ -309,6 +310,7 @@ static char *vp_name[] =
 	"ANTI_XENO_WORLD",
 	"ANTI_XENO_DEVEL",
 	"XENO_MILITARY",
+	"GOOD",
 	NULL
 };
 
