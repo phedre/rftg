@@ -16,6 +16,9 @@ ai_client_SOURCES = ai_client.c engine.c init.c ai.c net.c net.h rftg.h comm.c \
 
 dist_pkgdata_DATA = cards.txt campaign.txt images.data
 
+imagedir = $(pkgdatadir)/image
+dist_image_DATA = image/card*.png
+
 AM_CFLAGS = -Wall
 
 rftg_CFLAGS = -Wall @GTK_CFLAGS@ @GTK_MAC_CFLAGS@ -DRFTGDIR=\"$(pkgdatadir)\"
