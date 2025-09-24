@@ -17,7 +17,7 @@ case $host_os in
 		;;
 esac
 
-AM_INIT_AUTOMAKE([1.9])
+AM_INIT_AUTOMAKE([1.16 1.18])
 
 AC_PROG_CC
 
